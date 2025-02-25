@@ -1,4 +1,4 @@
-name: LeetCode Solver
+name: leetomatic
 
 on:
   schedule:
@@ -39,3 +39,10 @@ jobs:
         env:
           LEETCODE_SESSION_COOKIE: ${{ secrets.LEETCODE_SESSION_COOKIE }}
           GT_TOKEN: ${{ secrets.GT_TOKEN }}
+
+      - name: Debugging - List environment variables
+        run: |
+          echo "Environment variables:"
+          env
+          echo "Cookies:"
+          cat /home/runner/.cache/ms-playwright/chromium_headless_shell-*/chrome-linux/headless_shell

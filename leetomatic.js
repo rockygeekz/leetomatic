@@ -1,12 +1,11 @@
 import fetch from 'node-fetch';
-import { chromium } from 'playwright'; // Import Playwright
+import { chromium } from 'playwright';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const SESSION_COOKIE = process.env.LEETCODE_SESSION_COOKIE;
 const GT_TOKEN = process.env.GT_TOKEN;
-
 
 if (!SESSION_COOKIE) {
     throw new Error('LEETCODE_SESSION_COOKIE is not set');
@@ -230,13 +229,12 @@ const submitToLeetCode = async (code, leetcodeUrl) => {
         await page.goto(leetcodeUrl, { waitUntil: 'networkidle' });
         console.log('Navigated successfully!');
 
-
         // Check if redirected to login page
         const currentUrl = page.url();
         if (currentUrl.includes('accounts')) {
             console.log('Redirected to login page. Check your session cookie.');
             await browser.close();
-            return;
+            throw new Error('Session cookie is invalid or expired.');
         }
 
         // Wait for the editor to load
@@ -281,8 +279,6 @@ const submitToLeetCode = async (code, leetcodeUrl) => {
             page.on('requestfailed', request => {
                 console.log('Request failed:', request.url(), request.failure().errorText);
             });
-         
-            
         }
     } finally {
         // Close the browser
@@ -291,6 +287,7 @@ const submitToLeetCode = async (code, leetcodeUrl) => {
         }
     }
 };
+
 // Main Flow
 (async () => {
     try {
