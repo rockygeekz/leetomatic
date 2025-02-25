@@ -1,0 +1,30 @@
+name: LeetCode Solver
+
+on:
+  schedule:
+    - cron: '30 6 * * *'  # Runs at 6:30 AM UTC every day (12:00 PM IST)
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  solve-leetcode-problem:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Set up environment variables
+        run: |
+          echo "LEETCODE_SESSION_COOKIE=${{ secrets.LEETCODE_SESSION_COOKIE }}" > .env
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> .env
+
+      - name: Run the script
+        run: node script.js
