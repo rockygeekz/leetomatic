@@ -27,4 +27,4 @@ jobs:
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> .env
 
       - name: Run the script
-        run: node script.js
+        run: node leetomatic.js
