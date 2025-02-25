@@ -1,4 +1,4 @@
-name: LeetCode Solver
+name: leetomatic
 
 on:
   schedule:
@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Run the script
-        run: node script.js
+        run: node leetomatic.js
         env:
           LEETCODE_SESSION_COOKIE: ${{ secrets.LEETCODE_SESSION_COOKIE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GT_TOKEN: ${{ secrets.GT_TOKEN }}
