@@ -21,10 +21,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Set up environment variables
-        run: |
-          echo "LEETCODE_SESSION_COOKIE=${{ secrets.LEETCODE_SESSION_COOKIE }}" > .env
-          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> .env
-
       - name: Run the script
         run: node script.js
+        env:
+          LEETCODE_SESSION_COOKIE: ${{ secrets.LEETCODE_SESSION_COOKIE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
