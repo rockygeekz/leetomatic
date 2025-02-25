@@ -1,4 +1,4 @@
-name: leetomatic
+name: LeetCode Solver
 
 on:
   schedule:
@@ -21,7 +21,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Cache Playwright Browsers
+        id: cache-playwright
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            playwright-browsers-${{ runner.os }}-
+
       - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install
 
       - name: Run the script
