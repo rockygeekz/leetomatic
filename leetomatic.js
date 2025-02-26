@@ -4,11 +4,11 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const SESSION_COOKIE = process.env.LEETCODE_SESSION_COOKIE;
+const SESSION_COOKIE = process.env.SESSION_COOKIE;
 const GT_TOKEN = process.env.GT_TOKEN;
 
 if (!SESSION_COOKIE) {
-    throw new Error('LEETCODE_SESSION_COOKIE is not set');
+    throw new Error('SESSION_COOKIE is not set');
 }
 
 if (!GT_TOKEN) {
