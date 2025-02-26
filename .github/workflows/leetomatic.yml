@@ -40,11 +40,11 @@ jobs:
       - name: Run the script with xvfb
         run: xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' node leetomatic.js
         env:
-          LEETCODE_SESSION_COOKIE: ${{ secrets.LEETCODE_SESSION_COOKIE }}
+          SESSION_COOKIE: ${{ secrets.SESSION_COOKIE }}
           GT_TOKEN: ${{ secrets.GT_TOKEN }}
 
       - name: Debugging - List relevant environment variables
         if: failure()
         run: |
           echo "Environment variables:"
-          env | grep -E 'LEETCODE_SESSION_COOKIE|GT_TOKEN'
+          env | grep -E 'SESSION_COOKIE|GT_TOKEN'
