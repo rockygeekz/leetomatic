@@ -1,41 +1,50 @@
-  name: Leetomatic
+name: Leetomatic
 
-  on:
-    schedule:
-      - cron: '30 6 * * *'  # Runs at 6:30 AM UTC every day (12:00 PM IST)
-    workflow_dispatch:  # Allows manual triggering
+on:
+  schedule:
+    - cron: '30 6 * * *'  # Runs at 6:30 AM UTC every day (12:00 PM IST)
+  workflow_dispatch:  # Allows manual triggering
 
-  jobs:
-    solve-leetcode-problem:
-      runs-on: ubuntu-latest
+jobs:
+  solve-leetcode-problem:
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-        - name: Set up Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: '18'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-        - name: Install dependencies
-          run: npm install
+      - name: Install dependencies
+        run: npm install
 
-        - name: Cache Playwright Browsers
-          id: cache-playwright
-          uses: actions/cache@v3
-          with:
-            path: /home/runner/.cache/ms-playwright
-            key: playwright-browsers-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-            restore-keys: |
-              playwright-browsers-${{ runner.os }}-
+      - name: Install xvfb (X Virtual Framebuffer)
+        run: sudo apt-get install -y xvfb
 
-        - name: Install Playwright Browsers
-          if: steps.cache-playwright.outputs.cache-hit != 'true'
-          run: npx playwright install
+      - name: Cache Playwright Browsers
+        id: cache-playwright
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            playwright-browsers-${{ runner.os }}-
 
-        - name: Run the script
-          run: node leetomatic.js
-          env:
-            SESSION_COOKIE: ${{ secrets.SESSION_COOKIE }}
-            GT_TOKEN: ${{ secrets.GT_TOKEN }}
+      - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: npx playwright install
+
+      - name: Run the script with xvfb
+        run: xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' node leetomatic.js
+        env:
+          LEETCODE_SESSION_COOKIE: ${{ secrets.LEETCODE_SESSION_COOKIE }}
+          GT_TOKEN: ${{ secrets.GT_TOKEN }}
+
+      - name: Debugging - List relevant environment variables
+        if: failure()
+        run: |
+          echo "Environment variables:"
+          env | grep -E 'LEETCODE_SESSION_COOKIE|GT_TOKEN'
