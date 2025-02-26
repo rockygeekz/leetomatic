@@ -195,7 +195,7 @@ const submitToLeetCode = async (code, leetcodeUrl) => {
 
         // Launch Playwright with headless mode and additional arguments
         browser = await chromium.launch({
-            headless: true, // Keep it headless
+            headless: false, // Keep it headless
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
