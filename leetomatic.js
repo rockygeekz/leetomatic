@@ -19,6 +19,22 @@ if (!GT_TOKEN) {
 const REPO_OWNER = 'kamyu104';
 const REPO_NAME = 'LeetCode-Solutions';
 
+// Function to check session validity
+const checkSessionValidity = async () => {
+    const url = 'https://leetcode.com/api/problems/all/';
+    const response = await fetch(url, {
+        headers: {
+            'Cookie': `LEETCODE_SESSION=${SESSION_COOKIE}`,
+        },
+    });
+
+    if (response.status === 200) {
+        const data = await response.json();
+        return data.user_name; // Valid session returns user info
+    }
+    return null; // Session is invalid
+};
+
 // Fetch LeetCode Problem of the Day
 const fetchLeetCodeDailyProblem = async () => {
     const url = 'https://leetcode.com/graphql';
@@ -291,6 +307,13 @@ const submitToLeetCode = async (code, leetcodeUrl) => {
 // Main Flow
 (async () => {
     try {
+        // Step 0: Check session validity
+        const isValidSession = await checkSessionValidity();
+        if (!isValidSession) {
+            console.error('Session is invalid. Please update the SESSION_COOKIE in GitHub Secrets.');
+            process.exit(1);
+        }
+
         // Step 1: Fetch the daily problem
         const problemSlug = await fetchLeetCodeDailyProblem();
         const problemTitle = problemSlug.replace(/-/g, ' ');
