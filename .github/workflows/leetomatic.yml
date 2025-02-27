@@ -7,10 +7,10 @@ on:
     inputs:
       SESSION_COOKIE:
         description: 'LeetCode Session Cookie'
-        required: false  # Allow manual trigger without inputs
+        required: false
       GT_TOKEN:
         description: 'GitHub Token'
-        required: false  # Allow manual trigger without inputs
+        required: false
 
 jobs:
   solve-leetcode-problem:
@@ -44,18 +44,20 @@ jobs:
         if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install
 
-      - name: Set environment variables from inputs (if manual trigger)
+      - name: Load environment variables (scheduled run)
+        if: github.event_name == 'schedule'
+        run: |
+          while IFS= read -r line || [ -n "$line" ]; do
+            if [[ $line =~ ^[^#]*= ]]; then
+              echo "$line" >> $GITHUB_ENV
+            fi
+          done < .env
+
+      - name: Load environment variables (manual trigger)
         if: github.event_name == 'workflow_dispatch'
         run: |
           echo "SESSION_COOKIE=${{ inputs.SESSION_COOKIE }}" >> $GITHUB_ENV
           echo "GT_TOKEN=${{ inputs.GT_TOKEN }}" >> $GITHUB_ENV
-
-      - name: Set environment variables from .env file (if scheduled)
-        if: github.event_name == 'schedule'
-        run: |
-          export $(cat .env | xargs)
-          echo "SESSION_COOKIE=${SESSION_COOKIE}" >> $GITHUB_ENV
-          echo "GT_TOKEN=${GT_TOKEN}" >> $GITHUB_ENV
 
       - name: Run the script with xvfb
         run: xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' node leetomatic.js
