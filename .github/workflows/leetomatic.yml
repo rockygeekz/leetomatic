@@ -62,8 +62,3 @@ jobs:
         env:
           SESSION_COOKIE: ${{ env.SESSION_COOKIE }}
           GT_TOKEN: ${{ env.GT_TOKEN }}
-
-      - name: Debugging - List relevant environment variables
-        run: |
-          echo "SESSION_COOKIE: $SESSION_COOKIE"
-          echo "GT_TOKEN: $GT_TOKEN"
