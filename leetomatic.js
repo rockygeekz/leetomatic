@@ -301,7 +301,7 @@ const submitToLeetCode = async (code, leetcodeUrl) => {
 
     // Submit the code
     console.log("Clicking the submit button...");
-    await page.click('[data-e2e-locator="console-run-button"]');
+    await page.click('[data-e2e-locator="console-submit-button"]');
     await page.waitForTimeout(5000); // Wait for submission to complete
 
     console.log("Code submitted successfully!");
