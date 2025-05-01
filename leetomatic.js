@@ -285,7 +285,8 @@ const submitToLeetCode = async (code, leetcodeUrl) => {
     });
 
     // Add a random delay to mimic human behavior
-    const delay = Math.floor(Math.random() * 3000) + 1000; // Random delay between 1-4 seconds
+    // const delay = Math.floor(Math.random() * 3000) + 1000; // Random delay between 1-4 seconds
+    const delay = 0;
     await page.waitForTimeout(delay);
 
     // Inject the code into the editor
