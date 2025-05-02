@@ -2,7 +2,7 @@ name: Leetomatic
 
 on:
   schedule:
-    - cron: '30 6 * * *'  # Runs at 6:30 AM UTC every day (12:00 PM IST)
+    - cron: '30 0 * * *'  # Runs at 12:30 AM UTC every day (6:00 AM IST)
   workflow_dispatch:
     inputs:
       SESSION_COOKIE:
@@ -15,7 +15,7 @@ on:
 jobs:
   solve-leetcode-problem:
     runs-on: ubuntu-latest
- 
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
